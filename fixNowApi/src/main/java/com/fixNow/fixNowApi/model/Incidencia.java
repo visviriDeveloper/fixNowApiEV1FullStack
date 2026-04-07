@@ -1,10 +1,8 @@
 package com.fixNow.fixNowApi.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
@@ -15,26 +13,37 @@ public class Incidencia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotBlank(message = "El titulo no puede estar en blanco.")
+    @Size(max = 100, message = "El titulo no puede superar los 100 caracteres.")
+    @Column(length = 100, nullable = false)
     private String titulo;
+
     @NotBlank(message = "La descripcion no puede estar en blanco.")
+    @Column(nullable = false)
     private String descripcion;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Estado estado;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Prioridad prioridad;
+
     @NotBlank(message = "El nombre del usuario no puede estar vacio.")
+    @Column(nullable = false)
     private String usuarioReportante;
+
+    @Column(nullable = false, updatable = false)
     private LocalDateTime fechaRegistro;
 
     public Incidencia() {}
 
     public Incidencia(String titulo, String descripcion, Estado estado, Prioridad prioridad, String usuarioReportante) {
-        if(titulo.length() <= 100){
-            this.titulo = titulo;
-        }
+        this.titulo = titulo;
         this.descripcion = descripcion;
         this.estado = estado;
         this.prioridad = prioridad;
         this.usuarioReportante = usuarioReportante;
-        this.fechaRegistro = LocalDateTime.now();
     }
 
     public Integer getId() {

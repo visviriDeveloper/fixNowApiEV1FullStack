@@ -4,11 +4,9 @@ import com.fixNow.fixNowApi.model.Estado;
 import com.fixNow.fixNowApi.model.Incidencia;
 import com.fixNow.fixNowApi.service.IncidenciaService;
 import jakarta.validation.Valid;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -37,22 +35,23 @@ public class IncidenciaController {
         }
     }
 
-    // Retorna una incidencia especifica por su ID.
+    // Retorna la incidencia buscada por id.
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarIncidenciaPorId(@PathVariable Integer id) {
         try {
             Incidencia incidenciaBuscada = incidenciaService.buscarIncidenciaPorId(id)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Incidencia no encontrada"));
-            return ResponseEntity.ok(incidenciaBuscada); // Retorna estado 200
-        }catch(Exception e){
-            //retorna estado 500 (error db)
+                    .orElseThrow(() -> new NoSuchElementException("Incidencia no encontrada"));
+            return ResponseEntity.ok(incidenciaBuscada);
+        } catch (NoSuchElementException e) {
+            // Capturamos específicamente el 404 antes de la excepcion generica
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch(Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al obtener la incidencia por ID: " + id);
         }
     }
 
     // Retorna incidencias filtradas por estado.
-
     @GetMapping("/estado/{estado}")
     public ResponseEntity<?> buscarIncidenciaPorEstado(@PathVariable Estado estado) {
         try{
@@ -65,7 +64,7 @@ public class IncidenciaController {
         }
     }
 
-    // METODO PUT
+    // METODO POST
     // Agregar nueva incidencia.
     @PostMapping
     public ResponseEntity<?> agregarIncidencia(@Valid @RequestBody Incidencia incidencia) {
@@ -88,6 +87,7 @@ public class IncidenciaController {
             // Capturo el codigo 404
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Incidencia no encontrada por ID: " + id);
         }catch(Exception e){
+            //Envio codigo 500 (generico)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar incidencia ");
         }
     }

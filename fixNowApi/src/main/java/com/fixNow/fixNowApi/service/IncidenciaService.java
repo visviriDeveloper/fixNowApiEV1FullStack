@@ -5,6 +5,9 @@ import com.fixNow.fixNowApi.model.Incidencia;
 import com.fixNow.fixNowApi.repository.IncidenciaRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +36,7 @@ public class IncidenciaService {
 
     // Registar una nueva incidencia
     public Incidencia guardarIncidencia(Incidencia incidencia) {
+        incidencia.setFechaRegistro(LocalDateTime.now());
         return incidenciaRepository.save(incidencia);
     }
 
