@@ -32,7 +32,7 @@ public class IncidenciaService {
     public Optional<Incidencia> buscarIncidenciaPorId(Integer id) {
         return incidenciaRepository.findById(id);
     }
-
+    // Listar incidencias por Estado
     public List<Incidencia> buscarIncidenciasPorEstado(Estado estado) {
         return incidenciaRepository.findByEstado(estado);
     }
