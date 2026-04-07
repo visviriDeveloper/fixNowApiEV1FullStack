@@ -8,19 +8,32 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Incidencia {
+    /**
+     * Clase principal, la cual se encarga de definir los atributos de la entidad. No contiene logica de negocios.
+     */
 
+    // Gracias a la notacion @Id y @GeneratedValue el id es autogenerativo.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank(message = "El titulo no puede estar en blanco.")
+    @NotBlank(message = "El campo titulo no puede estar vacio")
+    //Se pedia que el atributo titulo tuviera una longitud maxima de 100 caracteres.
     @Size(max = 100, message = "El titulo no puede superar los 100 caracteres.")
+
+    /**
+     * El uso de @Column es para darle una capa adicional de seguridad a nuestra API, al estar trabajando directamente con H2 y el JPA,
+     * podemos definir los atributos de la TABLA (entidad) Incidencia, haciendo que los atributos no sean nulo
+     */
     @Column(length = 100, nullable = false)
     private String titulo;
 
     @NotBlank(message = "La descripcion no puede estar en blanco.")
     @Column(nullable = false)
     private String descripcion;
-
+    /**
+     * Segun lo que indage sobre los Enum, es preferible "transformarlo" a un tipo String en vez de ocuparlo con un valor numerico
+     *como si fuera un indice. Esto es por si agregaramos o quitaramos un nuevo Estado o Prioridad no queden desplazados los valores numericos.
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Estado estado;
@@ -29,15 +42,18 @@ public class Incidencia {
     @Column(nullable = false)
     private Prioridad prioridad;
 
-    @NotBlank(message = "El nombre del usuario no puede estar vacio.")
+    @NotBlank(message = "El campo usuario reportante no puede estar vacio.")
     @Column(nullable = false)
     private String usuarioReportante;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime fechaRegistro;
 
+    /**
+     * Constructor vacio necesario por JPA
+     */
     public Incidencia() {}
-
+    // Constructor sobrecargado, sin los atributos de Id ni de fechaRegistro.
     public Incidencia(String titulo, String descripcion, Estado estado, Prioridad prioridad, String usuarioReportante) {
         this.titulo = titulo;
         this.descripcion = descripcion;
@@ -45,7 +61,7 @@ public class Incidencia {
         this.prioridad = prioridad;
         this.usuarioReportante = usuarioReportante;
     }
-
+    //Getters y Setters (Importantisimos para que funciona nuestra API)
     public Integer getId() {
         return id;
     }

@@ -13,7 +13,10 @@ import java.util.Optional;
 
 @Service
 public class IncidenciaService {
-
+    /**
+     * Contiene toda la logica del negocio para la gestion de incidencias.
+     * Se encarga de coordinar las operaciones entre el Controller y el Repository.
+     */
     private final IncidenciaRepository incidenciaRepository;
 
     public IncidenciaService(IncidenciaRepository incidenciaRepository) {
@@ -36,12 +39,14 @@ public class IncidenciaService {
 
     // Registar una nueva incidencia
     public Incidencia guardarIncidencia(Incidencia incidencia) {
+        //Se define la fecha de Registro aca, como lo solicitaba el planteamiento del problema.
         incidencia.setFechaRegistro(LocalDateTime.now());
         return incidenciaRepository.save(incidencia);
     }
 
     // Actualizar registro completo de model (incidencia)
     public  Optional<Incidencia> actualizarIncidencia(Integer id, Incidencia incidenciaActualizada) {
+        // Utilizacion de una arrow Function para mapear directamente la entidad con los valores de sus atributos actualizados
         return incidenciaRepository.findById(id).map(incidencia ->{
             incidencia.setTitulo(incidenciaActualizada.getTitulo());
             incidencia.setDescripcion(incidenciaActualizada.getDescripcion());

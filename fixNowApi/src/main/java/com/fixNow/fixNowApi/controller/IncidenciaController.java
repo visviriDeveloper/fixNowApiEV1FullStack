@@ -12,16 +12,26 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/incidencias")
+@RequestMapping("api/v1/incidencias")
 public class IncidenciaController {
 
     private final IncidenciaService incidenciaService;
 
+    /**
+     * Controller que se encarga de gestionar las request de los usuarios y de proporcionar la response
+     * correspondiente para cada peticion mediante un formato JSON, clave y valor.
+     *
+     * El controller no tiene acceso a la logica de negocio, simplemente utiliza al service
+     * para podeer cumplir con su cometido.
+     *
+     * Se le inyecta como atributo al Service: incidenciaService
+     *
+     */
     public IncidenciaController(IncidenciaService incidenciaService) {
         this.incidenciaService = incidenciaService;
     }
 
-    // METODOS GET (LISTAR TODAS, POR ID Y ESTADO)
+    // METODOS GET (LISTAR TODAS , POR ID Y ESTADO)
 
     // Retorna la lista completa de incidencias.
     @GetMapping
@@ -64,6 +74,9 @@ public class IncidenciaController {
         }
     }
 
+    /*
+    El @Valid sera ocupado para poder utilizar el Validation haciendo que los campos, en caso de ser un tipo de dato primitivo, no puedan estar vacios o null.
+     */
     // METODO POST
     // Agregar nueva incidencia.
     @PostMapping
